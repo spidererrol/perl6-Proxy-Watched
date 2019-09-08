@@ -1,0 +1,20 @@
+{
+  "auth" : "github:spidererrol",
+  "authors" : [
+    "Timothy Hinchcliffe"
+  ],
+  "build-depends" : [ ],
+  "depends" : [ ],
+  "description" : "Provides a proxy with a supply that emits whenever the proxy is updated.",
+  "license" : "Artistic-2.0",
+  "name" : "Proxy::Watched",
+  "perl" : "6.c",
+  "provides" : {
+    "Proxy::Watched" : "lib/Proxy/Watched.pm6"
+  },
+  "resources" : [ ],
+  "source-url" : "",
+  "tags" : [ ],
+  "test-depends" : [ ],
+  "version" : "0.0.1"
+}
