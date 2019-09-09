@@ -51,11 +51,12 @@ This module exports just one function but it has many different forms.
 =head2 watch-var()
 
 With no parameters this returns a Proxy which overloads the contained value to provide the method provided by Monitor
-below. Unlike the seperate Monitors this variable does not "does" the role Tappable.
+below. Unlike the separate Monitors this variable does not "does" the role Tappable.
 
 It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal
-use of the value or you don't want those methods to escape as you pass the values arround then use one of the other
-varients below.
+use of the value or you don't want those methods to escape as you pass the values around then use one of the other
+variants below.
+
 
 =begin code :lang<perl6>
 
