@@ -18,6 +18,9 @@ my $watched := watch-var();
 $watched.tap: *.say;
 $watched = "Say this!";
 
+Supply.interval(1).tap: -> $i { $watched = $i };
+$watched.wait-for(3);
+
 my $monitor;
 my $monitored := watch-var($monitor);
 $monitor.tap: *.say;
@@ -143,6 +146,8 @@ In sink (void) context this method will wait until the watched variable is the s
 the values in the set (associative).
 
 In scalar context it will return a promise which will be kept when the above condition is met.
+
+This method may return / keep the promise straight away if the watched variable already meets the condition.
 
 =head2 method wait-while
 
