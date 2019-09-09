@@ -57,6 +57,8 @@ It allows you to call tap, wait-for, or wait-while on the value itself, but if t
 use of the value or you don't want those methods to escape as you pass the values around then use one of the other
 variants below.
 
+WARNING: You cannot use a wait-for(Junction) or wait-while(Junction) with this form! Use the form with a separate
+Monitor object instead.
 
 =begin code :lang<perl6>
 
@@ -174,10 +176,16 @@ class Monitor does Tappable {
     multi method wait-for($value) {
         self!wait-build(* ~~ $value);
     }
+    multi method wait-for(Junction $value) { # This needs to be specified otherwise the Junction will be auto-threaded.
+        self!wait-build(* ~~ $value);
+    }
     multi method wait-for(Setty $values) {
         self!wait-build(-> $a { $values{$a} });
     }
     multi method wait-while($value) {
+        self!wait-build(-> $a { ! ( $a ~~ $value ) });
+    }
+    multi method wait-while(Junction $value) { # This needs to be specified otherwise the Junction will be auto-threaded.
         self!wait-build(-> $a { ! ( $a ~~ $value ) });
     }
     multi method wait-while(Setty $values) {
@@ -214,7 +222,6 @@ multi sub watch-var($monitor is rw) {
 sub build($value,$monitor) {
     $value but role :: {
         method tap(&emit,*%more) { $monitor.tap(&emit,|%more) }
-        # These don't need to be multi because I'll pass through to the correct one anyway:
         method wait-for($value) { $monitor.wait-for($value) }
         method wait-while($value) { $monitor.wait-while($value) }
     }
