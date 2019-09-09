@@ -13,6 +13,9 @@ my $watched := watch-var();
 $watched.tap: *.say;
 $watched = "Say this!";
 
+Supply.interval(1).tap: -> $i { $watched = $i };
+$watched.wait-for(3);
+
 my $monitor;
 my $monitored := watch-var($monitor);
 $monitor.tap: *.say;
@@ -44,9 +47,11 @@ This module exports just one function but it has many different forms.
 watch-var()
 -----------
 
-With no parameters this returns a Proxy which overloads the contained value to provide the method provided by Monitor below. Unlike the seperate Monitors this variable does not "does" the role Tappable.
+With no parameters this returns a Proxy which overloads the contained value to provide the method provided by Monitor below. Unlike the separate Monitors this variable does not "does" the role Tappable.
 
-It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal use of the value or you don't want those methods to escape as you pass the values arround then use one of the other varients below.
+It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal use of the value or you don't want those methods to escape as you pass the values around then use one of the other variants below.
+
+WARNING: You cannot use a wait-for(Junction) or wait-while(Junction) with this form! Use the form with a separate Monitor object instead.
 
 ```perl6
 my $watched := watch-var();
@@ -131,6 +136,8 @@ method wait-for
 In sink (void) context this method will wait until the watched variable is the same as the value (smartmatch) or one of the values in the set (associative).
 
 In scalar context it will return a promise which will be kept when the above condition is met.
+
+This method may return / keep the promise straight away if the watched variable already meets the condition.
 
 method wait-while
 -----------------
