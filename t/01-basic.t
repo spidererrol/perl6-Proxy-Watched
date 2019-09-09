@@ -6,6 +6,9 @@ plan 42;
 
 my @promises;
 
+# Speed for interval supplies. Increase this (try 1) if wait-for or wait-while tests are failing.
+my \speed = 0.1;
+
 {
 my $supply-int;
 my $watched-int := watch-var(Int,$supply-int);
@@ -61,8 +64,8 @@ my $waitsupply;
 my $waitfor := watch-var($waitsupply);
 pass "waitfor created";
 my $ok = False;
-my $waitfor-fail = @promises.push: Promise.in(5).then({ unless $ok { flunk "Failed to wait-for"; } });
-my $waittick = Supply.interval(1).tap: -> $a { $waitfor = $a };
+my $waitfor-fail = @promises.push: Promise.in(speed * 5).then({ unless $ok { flunk "Failed to wait-for"; } });
+my $waittick = Supply.interval(speed).tap: -> $a { $waitfor = $a };
 $waitsupply.wait-for(3);
 $ok = True;
 $waittick.close;
@@ -83,8 +86,8 @@ $joint = "Hi";
 is $joint,"Hi","Joint value change to string";
 is $check,"Hi","Tap updated with string value";
 my $ok = False;
-my $joint-fail = @promises.push: Promise.in(5).then({ unless $ok { flunk "Failed to wait-for joint"; } });
-my $jointtick = Supply.interval(1).tap: -> $a { $joint = $a };
+my $joint-fail = @promises.push: Promise.in(speed * 5).then({ unless $ok { flunk "Failed to wait-for joint"; } });
+my $jointtick = Supply.interval(speed).tap: -> $a { $joint = $a };
 $joint.wait-for(3);
 pass "joint wait-for succeeded";
 $joint.wait-for(set 3,2);
