@@ -2,7 +2,7 @@ use v6.c;
 use Test;
 use Proxy::Watched;
 
-plan 42;
+plan 45;
 
 my @promises;
 
@@ -133,7 +133,29 @@ nok $! ~~ X::TypeCheck::Binding::Parameter,"No type error when assigning string 
 is $joint-any-init,"String","joint-any-init is now String";
 }
 
+{
+my $joint := watch-var;
+my $tap = Supply.interval(speed).tap: -> $a { $joint = $a };
+$joint.wait-for(* > 10);
+ok $joint > 10,"Ensure wait-for(&code) works";
+$tap.close;
+}
+
+{
+my $junc-mon;
+my $junc := watch-var($junc-mon);
+my $tap = Supply.interval(speed).tap: -> $a { $junc = $a };
+$junc-mon.wait-for(10|11|12|13|14);
+ok 15 > $junc > 9,"Ensure wait-for(Junction) works ($junc)";
+$tap.close;
+$junc = 0;
+$tap = Supply.interval(speed).tap: -> $a { $junc = $a };
+$junc-mon.wait-while(0|1|2|3|4|5|6|7);
+ok $junc > 7,"Ensure wait-while(Junction) works ($junc)";
+$tap.close;
+}
+
 await @promises;
 done-testing;
 
-# vim:ft=perl6
+# vim:ft=perl6:nospell
