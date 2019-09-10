@@ -51,8 +51,6 @@ With no parameters this returns a Proxy which overloads the contained value to p
 
 It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal use of the value or you don't want those methods to escape as you pass the values around then use one of the other variants below.
 
-WARNING: You cannot use a wait-for(Junction) or wait-while(Junction) with this form! Use the form with a separate Monitor object instead.
-
 ```perl6
 my $watched := watch-var();
 $watched.tap: *.say;
