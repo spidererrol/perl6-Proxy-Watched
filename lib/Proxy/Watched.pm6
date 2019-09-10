@@ -57,9 +57,6 @@ It allows you to call tap, wait-for, or wait-while on the value itself, but if t
 use of the value or you don't want those methods to escape as you pass the values around then use one of the other
 variants below.
 
-WARNING: You cannot use a wait-for(Junction) or wait-while(Junction) with this form! Use the form with a separate
-Monitor object instead.
-
 =begin code :lang<perl6>
 
 my $watched := watch-var();
@@ -222,8 +219,10 @@ multi sub watch-var($monitor is rw) {
 sub build($value,$monitor) {
     $value but role :: {
         method tap(&emit,*%more) { $monitor.tap(&emit,|%more) }
-        method wait-for($value) { $monitor.wait-for($value) }
-        method wait-while($value) { $monitor.wait-while($value) }
+        multi method wait-for(Any: $value) { $monitor.wait-for($value) } # This covers Setty just fine.
+        multi method wait-for(Any: Junction $value) { $monitor.wait-for($value) } # This needs a special because Junction isn't an Any.
+        multi method wait-while(Any: $value) { $monitor.wait-while($value) }
+        multi method wait-while(Any: Junction $value) { $monitor.wait-while($value) } # This needs a special because Junction isn't an Any.
     }
 }
 

@@ -2,7 +2,7 @@ use v6.c;
 use Test;
 use Proxy::Watched;
 
-plan 45;
+plan 46;
 
 my @promises;
 
@@ -146,12 +146,22 @@ my $junc-mon;
 my $junc := watch-var($junc-mon);
 my $tap = Supply.interval(speed).tap: -> $a { $junc = $a };
 $junc-mon.wait-for(10|11|12|13|14);
-ok 15 > $junc > 9,"Ensure wait-for(Junction) works ($junc)";
+diag "Junction auto-threaded!" if $junc == 14;
+is $junc,10,"Ensure wait-for(Junction) works ($junc)";
 $tap.close;
 $junc = 0;
 $tap = Supply.interval(speed).tap: -> $a { $junc = $a };
 $junc-mon.wait-while(0|1|2|3|4|5|6|7);
-ok $junc > 7,"Ensure wait-while(Junction) works ($junc)";
+is $junc,8,"Ensure wait-while(Junction) works ($junc)";
+$tap.close;
+}
+
+{
+my $junc := watch-var;
+my $tap = Supply.interval(speed).tap: -> $a { $junc = $a };
+$junc.wait-for(10|11|12|13|14);
+diag "Junction auto-threaded!" if $junc == 14;
+is $junc,10,"Ensure combined wait-for(Junction) works ($junc)";
 $tap.close;
 }
 
@@ -159,3 +169,4 @@ await @promises;
 done-testing;
 
 # vim:ft=perl6:nospell
+
