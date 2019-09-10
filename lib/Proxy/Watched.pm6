@@ -55,7 +55,7 @@ below. Unlike the separate Monitors this variable does not "does" the role Tappa
 
 It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal
 use of the value or you don't want those methods to escape as you pass the values around then use one of the other
-variants below.
+non-overloaded variants below.
 
 =begin code :lang<perl6>
 
@@ -65,9 +65,11 @@ $watched = "Say this!";
 
 =end code
 
-=head2 watch-var(:type(Type),:init(Value))
+=head2 watch-var(:type(Type)!,:init(Value))
 
 This produces a overloaded proxy a above, but with a restricted type (required) and optionally an initial value.
+Note that :type can be a definite value in which case the type of the value will be used and the value will be used as the
+default initial value.
 
 =begin code :lang<perl6>
 
@@ -82,7 +84,7 @@ my $lazy := watch-var(:type(7)); # Same as :type(Int),:init(7)
 
 =end code
 
-=head2 watch-var(:init(Value))
+=head2 watch-var(:init(Value)!)
 
 This provides an initialised, overloaded proxy without resticting the type.
 
@@ -90,7 +92,7 @@ This provides an initialised, overloaded proxy without resticting the type.
 
 my $watched := watch-var(:init(7));
 $watched.tap: *.say;
-$watched = "Warn"; # Valid.
+$watched = "Stringy"; # Valid.
 
 =end code
 
