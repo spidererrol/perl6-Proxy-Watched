@@ -13,7 +13,7 @@
     "Proxy::Watched" : "lib/Proxy/Watched.pm6"
   },
   "resources" : [ ],
-  "source-url" : "",
+  "source-url" : "https://github.com/spidererrol/perl6-Proxy-Watched.git",
   "tags" : [ ],
   "test-depends" : [ ],
   "version" : "0.0.1"

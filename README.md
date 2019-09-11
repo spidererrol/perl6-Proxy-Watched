@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/spidererrol/perl6-Proxy-Watched.svg?branch=master)](https://travis-ci.org/spidererrol/perl6-Proxy-Watched)
+
 NAME
 ====
 
@@ -49,7 +51,7 @@ watch-var()
 
 With no parameters this returns a Proxy which overloads the contained value to provide the method provided by Monitor below. Unlike the separate Monitors this variable does not "does" the role Tappable.
 
-It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal use of the value or you don't want those methods to escape as you pass the values around then use one of the other variants below.
+It allows you to call tap, wait-for, or wait-while on the value itself, but if that might conflict with any normal use of the value or you don't want those methods to escape as you pass the values around then use one of the other non-overloaded variants below.
 
 ```perl6
 my $watched := watch-var();
@@ -57,10 +59,10 @@ $watched.tap: *.say;
 $watched = "Say this!";
 ```
 
-watch-var(:type(Type),:init(Value))
------------------------------------
+watch-var(:type(Type)!,:init(Value))
+------------------------------------
 
-This produces a overloaded proxy a above, but with a restricted type (required) and optionally an initial value.
+This produces a overloaded proxy a above, but with a restricted type (required) and optionally an initial value. Note that :type can be a definite value in which case the type of the value will be used and the value will be used as the default initial value.
 
 ```perl6
 my $watched := watch-var(:type(Int));
@@ -73,15 +75,15 @@ say $watched-init;
 my $lazy := watch-var(:type(7)); # Same as :type(Int),:init(7)
 ```
 
-watch-var(:init(Value))
------------------------
+watch-var(:init(Value)!)
+------------------------
 
 This provides an initialised, overloaded proxy without resticting the type.
 
 ```perl6
 my $watched := watch-var(:init(7));
 $watched.tap: *.say;
-$watched = "Warn"; # Valid.
+$watched = "Stringy"; # Valid.
 ```
 
 watch-var($monitor,:$init)
