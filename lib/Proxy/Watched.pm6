@@ -1,5 +1,5 @@
 use v6.c;
-unit module Proxy::Watched:ver<0.0.1>:auth<github:spidererrol>;
+unit module Proxy::Watched:ver<0.0.2>:auth<github:spidererrol>;
 
 
 =begin pod
