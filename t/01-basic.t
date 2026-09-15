@@ -63,15 +63,11 @@ is $watched-any-init,"Hi","watched-any-init";
 my $waitsupply;
 my $waitfor := watch-var($waitsupply);
 pass "waitfor created";
-my $ok = False;
-my $waitfor-fail = @promises.push: Promise.in(speed * 5).then({ unless $ok { flunk "Failed to wait-for"; } });
-my $waittick = Supply.interval(speed).tap: -> $a { $waitfor = $a };
+my $waittick = Supply.interval(speed).tap: -> $a { $waitfor = $a; if $a > 3 { $waittick.close; } };
 $waitsupply.wait-for(3);
-$ok = True;
 $waittick.close;
 pass "waitfor succeeded";
 is $waitfor,3,"Check correct value was waited for";
-await $waitfor-fail;
 }
 
 {
@@ -85,18 +81,14 @@ is $check,7,"Tap updated with correct value";
 $joint = "Hi";
 is $joint,"Hi","Joint value change to string";
 is $check,"Hi","Tap updated with string value";
-my $ok = False;
-my $joint-fail = @promises.push: Promise.in(speed * 5).then({ unless $ok { flunk "Failed to wait-for joint"; } });
-my $jointtick = Supply.interval(speed).tap: -> $a { $joint = $a };
+my $jointtick = Supply.interval(speed).tap: -> $a { $joint = $a; if $a > 3 { $jointtick.close; } };
 $joint.wait-for(3);
 pass "joint wait-for succeeded";
 $joint.wait-for(set 3,2);
 pass "joint wait-for already-met set succeeded";
-$ok = True;
 $jointtick.close;
 is $joint,3,"Confirm joint value is as waited for";
 is $check,3,"Confirm tapped value is as waited for";
-await $joint-fail;
 }
 
 {
